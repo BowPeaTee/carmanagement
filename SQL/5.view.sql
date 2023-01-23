@@ -9,7 +9,7 @@ SELECT * FROM AutoInfo;
 
 
 CREATE VIEW ClientOrders AS
-SELECT name, lastName, dateOfPurchase, dateOfDelivery, manufacturer, modelName, yer, licensePlate, price
+SELECT cid, name, lastName, dateOfPurchase, dateOfDelivery, manufacturer, modelName, yer, licensePlate, price
 FROM clients AS A
 	INNER JOIN orders AS B
 		ON b.client = a.cid

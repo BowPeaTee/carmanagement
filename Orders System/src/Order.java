@@ -17,9 +17,20 @@ public class Order extends BaseFunctions{
         }
     }
 
+    public void displayMyOrders(String cid) {
+        System.out.println("\nOrders:");
+        try {
+            Statement select = connection.createStatement();
+            ResultSet result = select.executeQuery("SELECT * FROM ClientOrders where cid like '"+cid+"' ORDER BY dateOfPurchase;");
+            displayResultSet(result);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void returnCar(String carId) {
         try {
-            String sql = "UPDATE orders SET \"dateOfDelivery\" = CURRENT_DATE WHERE \"automobile\" = ?";
+            String sql = "UPDATE orders SET dateOfDelivery = CURRENT_DATE WHERE automobile = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             //statement.setDate(1, Date.valueOf(LocalDate.now()));
             statement.setString(1, carId);
@@ -46,7 +57,7 @@ public class Order extends BaseFunctions{
             if (connection != null) {
                 rollback();
             }
-            System.out.println("ĮDĖJIMO KLAIDA: " + e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
         } finally {
             setAutoCommit(true);
         }

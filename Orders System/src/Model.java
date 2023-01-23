@@ -32,7 +32,7 @@ public class Model extends BaseFunctions{
             if (connection != null) {
                 rollback();
             }
-            System.out.println("ĮDĖJIMO KLAIDA: " + e.getMessage());
+            System.out.println("INSERT ERROR: " + e.getMessage());
         } finally {
             setAutoCommit(true);
         }

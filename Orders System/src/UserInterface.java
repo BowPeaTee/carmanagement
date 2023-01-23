@@ -1,8 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.sql.*;
-import java.util.Arrays;
 
 public class UserInterface extends JFrame {
 
@@ -79,6 +79,8 @@ public class UserInterface extends JFrame {
         SignupButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addClient();
+                mainFrame.setVisible(false);
+                createClientLogin();
             }
         });
 
@@ -142,9 +144,17 @@ public class UserInterface extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         loginPanel.add(loginButton, gbc);
 
+        JButton goHomeButton = new JButton("Back");
         loginFrame.add(loginPanel, BorderLayout.CENTER);
+        loginFrame.add(goHomeButton, BorderLayout.SOUTH);
         loginFrame.setVisible(true);
 
+        goHomeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                loginFrame.setVisible(false);
+                goHome();
+            }
+        });
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String enteredUsername = usernameField.getText();
@@ -153,7 +163,7 @@ public class UserInterface extends JFrame {
                 if (checkCredentials(enteredUsername, enteredPassword)) {
                     JOptionPane.showMessageDialog(null, "Welcome to Car Management System");
                     loginFrame.setVisible(false);
-                    createClientButtonWindow();
+                    createClientButtonWindow(enteredUsername);
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid username or password, please try again");
                 }
@@ -204,7 +214,17 @@ public class UserInterface extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         loginPanel.add(loginButton, gbc);
 
+        JButton goHomeButton = new JButton("Back");
         loginFrame.add(loginPanel, BorderLayout.CENTER);
+        loginFrame.add(goHomeButton, BorderLayout.SOUTH);
+        loginFrame.setVisible(true);
+
+        goHomeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                loginFrame.setVisible(false);
+                goHome();
+            }
+        });
 
         loginFrame.setVisible(true);
 
@@ -213,7 +233,7 @@ public class UserInterface extends JFrame {
                 String enteredUsername = usernameField.getText();
                 char[] enteredPassword = passwordField.getPassword();
 
-                if (checkCredentials(enteredUsername, enteredPassword)) {
+                if (checkAdminCredentials(enteredUsername, enteredPassword)) {
                     JOptionPane.showMessageDialog(null, "Welcome to Car Management System");
                     loginFrame.setVisible(false);
                     createButtonWindow();
@@ -235,36 +255,51 @@ public class UserInterface extends JFrame {
         updateCarPriceButton = new JButton("Update Car Price");
         removeCarByIdButton = new JButton("Remove Car by ID");
         createOrderButton = new JButton("Create Order");
-        returnCarButton = new JButton("Return Car");
+        returnCarButton = new JButton("Mark Delivered Car");
         displayClientsButton = new JButton("Display Clients");
         displayCarsButton = new JButton("Display Cars");
         displayOrdersButton = new JButton("Display Orders");
+        JButton goHomeButton = new JButton("Sign Out");
 
         JFrame frame = new JFrame();
         frame.setSize(600, 400);
-        frame.setTitle("Button Example");
+        frame.setTitle("Admin Window");
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 2));
+        panel.setLayout(new BorderLayout());
 
-        panel.add(addClientButton);
-        panel.add(updateClientAddressButton);
-        panel.add(updateClientPhoneNumberButton);
-        panel.add(findClientByIdButton);
-        panel.add(removeClientByIdButton);
-        panel.add(addModelButton);
-        panel.add(addCarButton);
-        panel.add(updateCarPriceButton);
-        panel.add(removeCarByIdButton);
-        panel.add(createOrderButton);
-        panel.add(returnCarButton);
-        panel.add(displayClientsButton);
-        panel.add(displayCarsButton);
-        panel.add(displayOrdersButton);
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new GridLayout(7, 2));
+        centerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+        centerPanel.add(addClientButton);
+        centerPanel.add(displayClientsButton);
+        centerPanel.add(updateClientAddressButton);
+        centerPanel.add(updateClientPhoneNumberButton);
+        centerPanel.add(findClientByIdButton);
+        centerPanel.add(removeClientByIdButton);
+
+        centerPanel.add(addModelButton);
+        centerPanel.add(addCarButton);
+        centerPanel.add(displayCarsButton);
+        centerPanel.add(returnCarButton);
+        centerPanel.add(updateCarPriceButton);
+        centerPanel.add(removeCarByIdButton);
+
+        centerPanel.add(createOrderButton);
+        centerPanel.add(displayOrdersButton);
+
+        panel.add(centerPanel, BorderLayout.CENTER);
+        panel.add(goHomeButton, BorderLayout.SOUTH);
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         frame.add(panel);
         frame.setVisible(true);
-
+        goHomeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                goHome();
+            }
+        });
         addClientButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addClient();
@@ -350,52 +385,68 @@ public class UserInterface extends JFrame {
         });
     }
 
-    public void createClientButtonWindow() {
-        updateClientAddressButton = new JButton("Update Client Address");
-        updateClientPhoneNumberButton = new JButton("Update Client Phone Number");
-        removeClientByIdButton = new JButton("Remove Client by ID");
+    public void createClientButtonWindow(String cid) {
+        updateClientAddressButton = new JButton("Update Address");
+        updateClientPhoneNumberButton = new JButton("Update Phone Number");
+        removeClientByIdButton = new JButton("Delete Account");
         createOrderButton = new JButton("Create Order");
-        displayCarsButton = new JButton("Display Cars");
-        displayOrdersButton = new JButton("Display Orders");
+        displayCarsButton = new JButton("Available Cars");
+        displayOrdersButton = new JButton("My Orders");
+        JButton goHomeButton = new JButton("Sign Out");
 
         JFrame frame = new JFrame();
         frame.setSize(600, 400);
         frame.setTitle("Client Window");
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2));
+        panel.setLayout(new BorderLayout());
 
-        panel.add(updateClientAddressButton);
-        panel.add(updateClientPhoneNumberButton);
-        panel.add(removeClientByIdButton);
-        panel.add(createOrderButton);
-        panel.add(displayCarsButton);
-        panel.add(displayOrdersButton);
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new GridLayout(3, 2));
+        centerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+        centerPanel.add(displayCarsButton);
+        centerPanel.add(createOrderButton);
+        centerPanel.add(updateClientAddressButton);
+        centerPanel.add(updateClientPhoneNumberButton);
+        centerPanel.add(displayOrdersButton);
+        centerPanel.add(removeClientByIdButton);
+
+        panel.add(centerPanel, BorderLayout.CENTER);
+        panel.add(goHomeButton, BorderLayout.SOUTH);
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         frame.add(panel);
         frame.setVisible(true);
 
+        goHomeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                goHome();
+            }
+        });
         updateClientAddressButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                updateClientAddress();
+                updateMyAddress(cid);
             }
         });
 
         updateClientPhoneNumberButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                updateClientPhoneNumber();
+                UpdateMyPhoneNumber(cid);
             }
         });
 
         removeClientByIdButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                removeClientById();
+                removeClientAccount(cid);
+                frame.setVisible(false);
+                start();
             }
         });
 
         createOrderButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                createOrder();
+                createMyOrder(cid);
             }
         });
 
@@ -407,7 +458,7 @@ public class UserInterface extends JFrame {
 
         displayOrdersButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                order.displayOrders();
+                order.displayMyOrders(cid);
             }
         });
     }
@@ -416,11 +467,29 @@ public class UserInterface extends JFrame {
         return client.checkClientPassword(enteredUsername, enteredPassword);
     }
 
+    private boolean checkAdminCredentials(String enteredUsername, char[] enteredPassword) {
+        String correctUsername = "moit";
+        String correctPassword = "1234";
+
+        if (enteredUsername.equals(correctUsername) && new String(enteredPassword).equals(correctPassword)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void createOrder() {
         car.showAvailableCars();
         String carId = JOptionPane.showInputDialog("Choose a car (Enter Registration Number)");
         client.displayClients();
         String id = JOptionPane.showInputDialog("Enter the ID of the person renting the car");
+        order.createOrder(carId, Long.parseLong(id));
+    }
+
+    private void createMyOrder(String cid) {
+        car.showAvailableCars();
+        String carId = JOptionPane.showInputDialog("Choose a car (Enter Registration Number)");
+        String id = cid;
         order.createOrder(carId, Long.parseLong(id));
     }
 
@@ -451,6 +520,11 @@ public class UserInterface extends JFrame {
         car.addCar(Integer.parseInt(modelId), carId, Integer.parseInt(price));
     }
 
+    private void removeClientAccount(String cid) {
+        String id = cid;
+        client.removeClient(Long.parseLong(id));
+    }
+
     private void removeClientById() {
         client.displayClients();
         String id = JOptionPane.showInputDialog("Enter the ID of the client you want to remove:");
@@ -469,12 +543,25 @@ public class UserInterface extends JFrame {
         client.updatePhoneNumber(Long.parseLong(id), phoneNumber);
     }
 
+    private void UpdateMyPhoneNumber(String cid) {
+        String id = cid;
+        String phoneNumber = JOptionPane.showInputDialog("Enter the new phone number:");
+        client.updatePhoneNumber(Long.parseLong(id), phoneNumber);
+    }
+
     private void updateClientAddress() {
         client.displayClients();
         String id = JOptionPane.showInputDialog("Enter the ID of the client you want to update:");
         String address = JOptionPane.showInputDialog("Enter the new address:");
         client.updateAddress(Long.parseLong(id), address);
     }
+
+    private void updateMyAddress(String cid) {
+        String id = cid;
+        String address = JOptionPane.showInputDialog("Enter the new address:");
+        client.updateAddress(Long.parseLong(id), address);
+    }
+
 
     private void addModel() {
         String brand = JOptionPane.showInputDialog("Enter manufacturer:");
@@ -490,5 +577,9 @@ public class UserInterface extends JFrame {
         String phone = JOptionPane.showInputDialog("Enter phone number:");
         String address = JOptionPane.showInputDialog("Enter the address:");
         client.addClient(id, name, surname, phone, address);
+    }
+
+    private void goHome() {
+        start();
     }
 }

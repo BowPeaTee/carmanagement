@@ -10,7 +10,7 @@ public class Car  extends BaseFunctions{
         System.out.println("\nautomobiles:");
         try {
             Statement select = connection.createStatement();
-            ResultSet result = select.executeQuery("SELECT * FROM AutoInfo ORDER BY licensePlate");
+            ResultSet result = select.executeQuery("SELECT * FROM AutoInfo where licensePlate not in (select licensePlate from ClientOrders) ORDER BY licensePlate");
             displayResultSet(result);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class Car  extends BaseFunctions{
 
     public void updatePrice(String carId, int price) {
         try {
-            String sql = "UPDATE automobiles SET \"price\" = ? WHERE \"licensePlate\" = ?";
+            String sql = "UPDATE automobiles SET price = ? WHERE licensePlate = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(2, carId);
             statement.setInt(1, price);
@@ -53,7 +53,7 @@ public class Car  extends BaseFunctions{
 
     public void remove(String carId) {
         try {
-            String sql = "DELETE FROM automobiles WHERE \"licensePlate\" = ?";
+            String sql = "DELETE FROM automobiles WHERE licensePlate = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, carId);
             statement.execute();
@@ -66,7 +66,7 @@ public class Car  extends BaseFunctions{
         System.out.println("\nautomobiles:");
         try {
             Statement select = connection.createStatement();
-            ResultSet result = select.executeQuery("SELECT * FROM AutoInfo WHERE licensePlate NOT IN (SELECT automobile from orders);");
+            ResultSet result = select.executeQuery("SELECT * FROM AutoInfo WHERE licensePlate NOT IN (SELECT licensePlate from ClientOrders);");
             displayResultSet(result);
         } catch (SQLException e) {
             e.printStackTrace();
