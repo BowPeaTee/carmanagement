@@ -28,7 +28,6 @@ INSERT INTO orders VALUES(default, '39510102889', 'KL11UB007', '2016-05-13');
 INSERT INTO orders VALUES(default, '39510102889', 'TN04CG111', '2016-05-12');
 
 
-
 SELECT * 
 FROM clients;
 

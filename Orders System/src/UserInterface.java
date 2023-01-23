@@ -57,6 +57,31 @@ public class UserInterface extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         mainPanel.add(continueButton, gbc);
 
+        JButton SignupButton = new JButton("Sign Up");
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        mainPanel.add(SignupButton, gbc);
+
+        roleCombo.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    Object item = e.getItem();
+                    if (item.equals("Admin")) {
+                        SignupButton.setVisible(false);
+                    } else {
+                        SignupButton.setVisible(true);
+                    }
+                }
+            }
+        });
+
+        SignupButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addClient();
+            }
+        });
+
         mainFrame.add(mainPanel, BorderLayout.CENTER);
 
         mainFrame.setVisible(true);
@@ -75,6 +100,68 @@ public class UserInterface extends JFrame {
     }
 
     public void createClientLogin() {
+        JFrame loginFrame = new JFrame("Login");
+        loginFrame.setSize(400, 300);
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginFrame.setLayout(new BorderLayout());
+
+        JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(new GridBagLayout());
+        loginPanel.setSize(400, 300);
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JLabel usernameLabel = new JLabel("Username:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        loginPanel.add(usernameLabel, gbc);
+
+        JTextField usernameField = new JTextField();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        usernameField.setColumns(15);
+        loginPanel.add(usernameField, gbc);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        loginPanel.add(passwordLabel, gbc);
+
+        JPasswordField passwordField = new JPasswordField();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        passwordField.setColumns(15);
+        loginPanel.add(passwordField, gbc);
+
+        JButton loginButton = new JButton("Login");
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        loginPanel.add(loginButton, gbc);
+
+        loginFrame.add(loginPanel, BorderLayout.CENTER);
+        loginFrame.setVisible(true);
+
+        loginButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String enteredUsername = usernameField.getText();
+                char[] enteredPassword = passwordField.getPassword();
+
+                if (checkCredentials(enteredUsername, enteredPassword)) {
+                    JOptionPane.showMessageDialog(null, "Welcome to Car Management System");
+                    loginFrame.setVisible(false);
+                    createClientButtonWindow();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid username or password, please try again");
+                }
+            }
+        });
+    }
+
+    public void createAdminLogin() {
         JFrame loginFrame = new JFrame("Login");
         loginFrame.setSize(400, 300);
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -137,11 +224,6 @@ public class UserInterface extends JFrame {
         });
     }
 
-
-
-    public void createAdminLogin() {
-    }
-
     public void createButtonWindow() {
         addClientButton = new JButton("Add Client");
         updateClientAddressButton = new JButton("Update Client Address");
@@ -157,6 +239,31 @@ public class UserInterface extends JFrame {
         displayClientsButton = new JButton("Display Clients");
         displayCarsButton = new JButton("Display Cars");
         displayOrdersButton = new JButton("Display Orders");
+
+        JFrame frame = new JFrame();
+        frame.setSize(600, 400);
+        frame.setTitle("Button Example");
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(5, 2));
+
+        panel.add(addClientButton);
+        panel.add(updateClientAddressButton);
+        panel.add(updateClientPhoneNumberButton);
+        panel.add(findClientByIdButton);
+        panel.add(removeClientByIdButton);
+        panel.add(addModelButton);
+        panel.add(addCarButton);
+        panel.add(updateCarPriceButton);
+        panel.add(removeCarByIdButton);
+        panel.add(createOrderButton);
+        panel.add(returnCarButton);
+        panel.add(displayClientsButton);
+        panel.add(displayCarsButton);
+        panel.add(displayOrdersButton);
+
+        frame.add(panel);
+        frame.setVisible(true);
 
         addClientButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -227,6 +334,68 @@ public class UserInterface extends JFrame {
         displayClientsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 client.displayClients();
+            }
+        });
+
+        displayCarsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                car.displayCars();
+            }
+        });
+
+        displayOrdersButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                order.displayOrders();
+            }
+        });
+    }
+
+    public void createClientButtonWindow() {
+        updateClientAddressButton = new JButton("Update Client Address");
+        updateClientPhoneNumberButton = new JButton("Update Client Phone Number");
+        removeClientByIdButton = new JButton("Remove Client by ID");
+        createOrderButton = new JButton("Create Order");
+        displayCarsButton = new JButton("Display Cars");
+        displayOrdersButton = new JButton("Display Orders");
+
+        JFrame frame = new JFrame();
+        frame.setSize(600, 400);
+        frame.setTitle("Client Window");
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(3, 2));
+
+        panel.add(updateClientAddressButton);
+        panel.add(updateClientPhoneNumberButton);
+        panel.add(removeClientByIdButton);
+        panel.add(createOrderButton);
+        panel.add(displayCarsButton);
+        panel.add(displayOrdersButton);
+
+        frame.add(panel);
+        frame.setVisible(true);
+
+        updateClientAddressButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateClientAddress();
+            }
+        });
+
+        updateClientPhoneNumberButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateClientPhoneNumber();
+            }
+        });
+
+        removeClientByIdButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                removeClientById();
+            }
+        });
+
+        createOrderButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                createOrder();
             }
         });
 

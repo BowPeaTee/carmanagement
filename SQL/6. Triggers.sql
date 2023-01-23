@@ -18,7 +18,7 @@ CREATE FUNCTION noPurchaseSoldStock() RETURNS "trigger" AS
 $$
 	BEGIN
 		IF (SELECT COUNT(*) FROM orders
-			WHERE (automobile = NEW.automobile) > 0
+			WHERE (automobile = NEW.automobile)) > 0
 		THEN
 			RAISE EXCEPTION 'Car already purchased by another user! Kindly purchase from new stock.';
 		END IF;
