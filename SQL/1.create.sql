@@ -1,0 +1,35 @@
+CREATE TABLE clients(
+	cid VARCHAR(11) NOT NULL,
+	name VARCHAR(30),
+	lastName VARCHAR(30),
+	phoneNo VARCHAR(12) DEFAULT '-',
+	Address VARCHAR(30) DEFAULT '-',
+	PRIMARY KEY (cid)
+);
+
+CREATE TABLE models(
+	ID SERIAL NOT NULL,
+	manufacturer VARCHAR(30),
+	modelName VARCHAR(30),
+	yer INT NOT NULL CHECK (yer > 1900 AND  yer < date_part('year', CURRENT_DATE) + 1),
+	PRIMARY KEY (ID)
+);
+
+CREATE TABLE automobiles(
+	licensePlate VARCHAR(9) NOT NULL,
+	model INT,
+	price INT DEFAULT 0 CHECK(price > 0),
+	PRIMARY KEY (licensePlate),
+	FOREIGN KEY (model) REFERENCES models ON DELETE RESTRICT ON UPDATE RESTRICT
+);
+
+CREATE TABLE orders(
+	ID SERIAL NOT NULL,
+	client VARCHAR(11),
+	automobile VARCHAR(9),
+	dateOfPurchase DATE NOT NULL,
+	dateOfDelivery DATE CHECK (dateOfDelivery <= CURRENT_DATE),
+	PRIMARY KEY (ID),
+	FOREIGN KEY (client) REFERENCES clients ON DELETE RESTRICT ON UPDATE RESTRICT,
+	FOREIGN KEY (automobile) REFERENCES automobiles ON DELETE RESTRICT ON UPDATE RESTRICT
+);
